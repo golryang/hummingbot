@@ -7,6 +7,15 @@ MAX_ORDER_ID_LEN = None
 
 MARKET_ORDER_SLIPPAGE = 0.05
 
+"""
+Optional API-trader builder configuration for perpetuals.
+- BUILDER_WALLET: EVM address string like '0x...'.
+- BUILDER_FEE: integer fee units (e.g. 25 for 0.025%).
+If both are set (not None), orders will include a builder object.
+"""
+BUILDER_WALLET = "0x1924b8561eeF20e70Ede628A296175D358BE80e5"
+BUILDER_FEE = 25  # 0.025% for perp
+
 DOMAIN = EXCHANGE_NAME
 TESTNET_DOMAIN = "hyperliquid_perpetual_testnet"
 

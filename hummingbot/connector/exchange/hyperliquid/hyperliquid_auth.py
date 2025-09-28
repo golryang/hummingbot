@@ -130,6 +130,10 @@ class HyperliquidAuth(AuthBase):
             "orders": [order_spec_to_order_wire(order)],
             "grouping": grouping,
         }
+        # Pass through optional API-trader builder if present in params
+        builder = params.get("builder")
+        if builder is not None:
+            order_action["builder"] = builder
         signature = self.sign_l1_action(
             self.wallet,
             order_action,

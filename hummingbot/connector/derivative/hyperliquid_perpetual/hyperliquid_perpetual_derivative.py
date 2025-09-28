@@ -392,6 +392,16 @@ class HyperliquidPerpetualDerivative(PerpetualDerivativePyBase):
                 "cloid": order_id,
             }
         }
+        # Optionally include API-trader builder (from kwargs or constants)
+        builder_wallet = kwargs.get("builder_wallet") or CONSTANTS.BUILDER_WALLET
+        builder_fee = kwargs.get("builder_fee")
+        if builder_fee is None:
+            builder_fee = CONSTANTS.BUILDER_FEE
+        if builder_wallet is not None and builder_fee is not None:
+            api_params["builder"] = {
+                "b": str(builder_wallet).lower(),
+                "f": int(builder_fee),
+            }
         order_result = await self._api_post(
             path_url=CONSTANTS.CREATE_ORDER_URL,
             data=api_params,
