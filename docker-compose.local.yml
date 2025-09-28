@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  hummingbot-local:
+    container_name: hummingbot-local
+    image: hummingbot-local:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./conf:/home/hummingbot/conf
+      - ./conf/connectors:/home/hummingbot/conf/connectors
+      - ./conf/strategies:/home/hummingbot/conf/strategies
+      - ./conf/controllers:/home/hummingbot/conf/controllers
+      - ./conf/scripts:/home/hummingbot/conf/scripts
+      - ./logs:/home/hummingbot/logs
+      - ./data:/home/hummingbot/data
+      - ./certs:/home/hummingbot/certs
+      - ./scripts:/home/hummingbot/scripts
+      - ./controllers:/home/hummingbot/controllers
+    tty: true
+    stdin_open: true
+    network_mode: host
+    environment:
+      - CONFIG_PASSWORD=admin
+    working_dir: /home/hummingbot
+    command: >
+      bash -c "
+      mkdir -p conf/connectors conf/strategies conf/controllers conf/scripts &&
+      mkdir -p logs data scripts certs &&
+      source /opt/conda/etc/profile.d/conda.sh &&
+      conda activate hummingbot &&
+      python bin/hummingbot.py
+      "
+
+      
