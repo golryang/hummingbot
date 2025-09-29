@@ -14,7 +14,7 @@ Optional API-trader builder configuration.
 If both are set (not None), orders will include a builder object.
 """
 BUILDER_WALLET = "0x1924b8561eeF20e70Ede628A296175D358BE80e5"
-BUILDER_FEE = 1  # 0.1% for spot -> 0.001% (1bp)
+BUILDER_FEE = 100  # 0.1%
 
 DOMAIN = EXCHANGE_NAME
 TESTNET_DOMAIN = "hyperliquid_testnet"

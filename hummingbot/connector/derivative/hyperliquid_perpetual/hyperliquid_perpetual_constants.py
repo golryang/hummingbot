@@ -14,7 +14,7 @@ Optional API-trader builder configuration for perpetuals.
 If both are set (not None), orders will include a builder object.
 """
 BUILDER_WALLET = "0x1924b8561eeF20e70Ede628A296175D358BE80e5"
-BUILDER_FEE = 2.5  # 0.025% for perp -> 0.001% (1bp)
+BUILDER_FEE = 25  # 0.025% for perp -> 0.001% (1bp)
 
 DOMAIN = EXCHANGE_NAME
 TESTNET_DOMAIN = "hyperliquid_perpetual_testnet"
