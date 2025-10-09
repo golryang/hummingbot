@@ -194,23 +194,39 @@ class ArbitrageExecutor(ExecutorBase):
         self.place_sell_arbitrage_order()
 
     def place_buy_arbitrage_order(self):
+        # For LIMIT orders, use best ask (to become maker on buy side)
+        # For MARKET orders, use the calculated price
+        if self.config.order_type == OrderType.LIMIT:
+            order_book = self.connectors[self.buying_market.connector_name].get_order_book(self.buying_market.trading_pair)
+            price = order_book.get_price(False)  # best ask price
+        else:
+            price = self._last_buy_price
+
         self.buy_order.order_id = self.place_order(
             connector_name=self.buying_market.connector_name,
             trading_pair=self.buying_market.trading_pair,
-            order_type=OrderType.MARKET,
+            order_type=self.config.order_type,
             side=TradeType.BUY,
             amount=self.order_amount,
-            price=self._last_buy_price,
+            price=price,
         )
 
     def place_sell_arbitrage_order(self):
+        # For LIMIT orders, use best bid (to become maker on sell side)
+        # For MARKET orders, use the calculated price
+        if self.config.order_type == OrderType.LIMIT:
+            order_book = self.connectors[self.selling_market.connector_name].get_order_book(self.selling_market.trading_pair)
+            price = order_book.get_price(True)  # best bid price
+        else:
+            price = self._last_sell_price
+
         self.sell_order.order_id = self.place_order(
             connector_name=self.selling_market.connector_name,
             trading_pair=self.selling_market.trading_pair,
-            order_type=OrderType.MARKET,
+            order_type=self.config.order_type,
             side=TradeType.SELL,
             amount=self.order_amount,
-            price=self._last_sell_price,
+            price=price,
         )
 
     async def update_tx_cost(self):
@@ -285,14 +301,15 @@ class ArbitrageExecutor(ExecutorBase):
             gas_cost = connector.network_transaction_fee
             return gas_cost.amount / self.config.gas_conversion_price
         else:
+            is_maker = self.config.order_type == OrderType.LIMIT
             fee = connector.get_fee(
                 base_currency=asset,
                 quote_currency=asset,
-                order_type=OrderType.MARKET,
+                order_type=self.config.order_type,
                 order_side=TradeType.BUY if is_buy else TradeType.SELL,
                 amount=order_amount,
                 price=price,
-                is_maker=False
+                is_maker=is_maker
             )
             return fee.fee_amount_in_token(
                 trading_pair=trading_pair,

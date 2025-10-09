@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   hummingbot-local:
     container_name: hummingbot-local
@@ -8,15 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
+      # Config and data only (no code mount to preserve Cython .so files)
       - ./conf:/home/hummingbot/conf
-      - ./conf/connectors:/home/hummingbot/conf/connectors
-      - ./conf/strategies:/home/hummingbot/conf/strategies
-      - ./conf/controllers:/home/hummingbot/conf/controllers
-      - ./conf/scripts:/home/hummingbot/conf/scripts
       - ./logs:/home/hummingbot/logs
       - ./data:/home/hummingbot/data
       - ./certs:/home/hummingbot/certs
-      - ./scripts:/home/hummingbot/scripts
       - ./controllers:/home/hummingbot/controllers
     tty: true
     stdin_open: true

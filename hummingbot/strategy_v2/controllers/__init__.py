@@ -7,6 +7,10 @@ from hummingbot.strategy_v2.controllers.market_making_controller_base import (
     MarketMakingControllerBase,
     MarketMakingControllerConfigBase,
 )
+from hummingbot.strategy_v2.controllers.perp_arbitrage_controller import (
+    PerpArbitrageController,
+    PerpArbitrageControllerConfig,
+)
 
 __all__ = [
     "ControllerBase",
@@ -15,4 +19,6 @@ __all__ = [
     "DirectionalTradingControllerConfigBase",
     "MarketMakingControllerBase",
     "MarketMakingControllerConfigBase",
+    "PerpArbitrageController",
+    "PerpArbitrageControllerConfig",
 ]

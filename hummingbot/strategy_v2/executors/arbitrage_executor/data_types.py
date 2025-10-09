@@ -1,6 +1,7 @@
 from decimal import Decimal
 from typing import Literal, Optional
 
+from hummingbot.core.data_type.common import OrderType
 from hummingbot.strategy_v2.executors.data_types import ConnectorPair, ExecutorConfigBase
 
 
@@ -11,3 +12,4 @@ class ArbitrageExecutorConfig(ExecutorConfigBase):
     order_amount: Decimal
     min_profitability: Decimal
     gas_conversion_price: Optional[Decimal] = None
+    order_type: OrderType = OrderType.MARKET  # MARKET or LIMIT

@@ -1,0 +1,7 @@
+FROM hummingbot/hummingbot:latest
+
+# Development mode - skip Cython rebuild, use prebuilt binaries
+WORKDIR /home/hummingbot
+
+# Just copy everything (dev mode)
+CMD ["bash"]

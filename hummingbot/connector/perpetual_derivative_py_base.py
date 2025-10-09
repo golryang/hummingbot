@@ -368,8 +368,24 @@ class PerpetualDerivativePyBase(ExchangePyBase, ABC):
 
     async def _init_funding_info(self):
         for trading_pair in self.trading_pairs:
-            funding_info = await self._orderbook_ds.get_funding_info(trading_pair)
-            self._perpetual_trading.initialize_funding_info(funding_info)
+            try:
+                funding_info = await asyncio.wait_for(
+                    self._orderbook_ds.get_funding_info(trading_pair),
+                    timeout=10.0
+                )
+                self._perpetual_trading.initialize_funding_info(funding_info)
+            except asyncio.TimeoutError:
+                self.logger().warning(f"Timeout getting funding info for {trading_pair}, retrying...")
+                try:
+                    funding_info = await asyncio.wait_for(
+                        self._orderbook_ds.get_funding_info(trading_pair),
+                        timeout=10.0
+                    )
+                    self._perpetual_trading.initialize_funding_info(funding_info)
+                except Exception as e:
+                    self.logger().error(f"Failed to get funding info for {trading_pair}: {e}")
+            except Exception as e:
+                self.logger().error(f"Error getting funding info for {trading_pair}: {e}")
 
     async def _funding_payment_polling_loop(self):
         """
